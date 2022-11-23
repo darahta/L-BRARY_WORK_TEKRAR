@@ -4,7 +4,7 @@ import AddBookForm from "./AddBookForm";
 
 const AddBook = () => {
    return (
-      <div className="container my-5">
+      <div>
          <Header />
          <AddBookForm />
       </div>

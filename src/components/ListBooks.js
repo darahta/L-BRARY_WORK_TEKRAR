@@ -2,10 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loading from "./Loading";
+import components from "../components/delete.svg";
+import pencil from "../components/pencil.svg";
 
 const ListBooks = (props) => {
    const [books, setBooks] = useState(null);
    const [categories, setCategories] = useState(null);
+   const [didUpdate, setDidUpdate] = useState(false);
 
    useEffect(() => {
       axios
@@ -22,7 +25,17 @@ const ListBooks = (props) => {
          })
 
          .catch((err) => console.log("book err", err));
-   }, []);
+   }, [didUpdate]);
+
+   const KitapSil = (id) => {
+      console.log(id);
+      axios
+         .delete(`http://localhost:3004/books/${id}`)
+         .then((res) => {
+            setDidUpdate(!didUpdate);
+         })
+         .catch((err) => console.log(err));
+   };
 
    if (books === null || categories === null) {
       return (
@@ -41,11 +54,12 @@ const ListBooks = (props) => {
          </div>
          <table className="table">
             <thead>
-               <tr>
+               <tr className="text-center">
                   <th scope="col">Kitap Adı</th>
                   <th scope="col">Yazar</th>
                   <th scope="col">Kategori</th>
                   <th scope="col">ISBN</th>
+                  <th scope="col">İşlem</th>
                </tr>
             </thead>
             <tbody>
@@ -54,11 +68,28 @@ const ListBooks = (props) => {
                      (cat) => cat.id === book.categoryId
                   );
                   return (
-                     <tr>
+                     <tr className="text-center">
                         <td>{book.name}</td>
                         <td>{book.author}</td>
                         <td>{category.name}</td>
-                        <td>{book.isbn}</td>
+                        <td>{book.isbn === "" ? "-" : book.isbn}</td>
+                        <td>
+                           <div class="btn-group">
+                              <div
+                                 type="button"
+                                 className="mx-2 btn-sm"
+                                 onClick={() => KitapSil(book.id)}
+                              >
+                                 <img src={components} />
+                              </div>
+                              <Link
+                                 to={`edit-book/${book.id}`}
+                                 className="btn-sm"
+                              >
+                                 <img src={pencil} />
+                              </Link>
+                           </div>
+                        </td>
                      </tr>
                   );
                })}
