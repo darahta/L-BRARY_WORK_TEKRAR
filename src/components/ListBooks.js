@@ -4,11 +4,18 @@ import { Link } from "react-router-dom";
 import Loading from "./Loading";
 import components from "../components/delete.svg";
 import pencil from "../components/pencil.svg";
+import Modal from "./Modal";
+import { useSelector } from "react-redux";
 
 const ListBooks = (props) => {
+   const { categoriesState } = useSelector((state) => state);
+   console.log("listbooks", categoriesState);
    const [books, setBooks] = useState(null);
-   const [categories, setCategories] = useState(null);
+   // const [categories, setCategories] = useState(null);
    const [didUpdate, setDidUpdate] = useState(false);
+   const [showModal, setShowModal] = useState(false);
+   const [silinecekKitap, setSilinecekKitap] = useState(null);
+   const [silinecekKitapIsmi, setSilinecekKitapIsmi] = useState("");
 
    useEffect(() => {
       axios
@@ -16,12 +23,12 @@ const ListBooks = (props) => {
          .then((resBook) => {
             console.log(resBook.data);
             setBooks(resBook.data);
-            axios
-               .get("http://localhost:3004/categories")
-               .then((resCat) => {
-                  setCategories(resCat.data);
-               })
-               .catch((err) => console.log("categories err", err));
+            // axios
+            //    .get("http://localhost:3004/categories")
+            //    .then((resCat) => {
+            //       setCategories(resCat.data);
+            //    })
+            //    .catch((err) => console.log("categories err", err));
          })
 
          .catch((err) => console.log("book err", err));
@@ -33,11 +40,12 @@ const ListBooks = (props) => {
          .delete(`http://localhost:3004/books/${id}`)
          .then((res) => {
             setDidUpdate(!didUpdate);
+            setShowModal(false);
          })
          .catch((err) => console.log(err));
    };
 
-   if (books === null || categories === null) {
+   if (books === null || categoriesState.success !== true) {
       return (
          <div>
             <Loading />
@@ -64,21 +72,26 @@ const ListBooks = (props) => {
             </thead>
             <tbody>
                {books.map((book) => {
-                  const category = categories.find(
+                  const category = categoriesState.categories.find(
                      (cat) => cat.id === book.categoryId
                   );
                   return (
-                     <tr className="text-center">
+                     <tr className="text-center" key={book.id}>
                         <td>{book.name}</td>
                         <td>{book.author}</td>
                         <td>{category.name}</td>
                         <td>{book.isbn === "" ? "-" : book.isbn}</td>
                         <td>
-                           <div class="btn-group">
+                           <div className="btn-group">
                               <div
                                  type="button"
                                  className="mx-2 btn-sm"
-                                 onClick={() => KitapSil(book.id)}
+                                 onClick={() => {
+                                    setShowModal(true);
+                                    setSilinecekKitap(book.id);
+                                    setSilinecekKitapIsmi(book.name);
+                                    // KitapSil(book.id);
+                                 }}
                               >
                                  <img src={components} />
                               </div>
@@ -95,6 +108,14 @@ const ListBooks = (props) => {
                })}
             </tbody>
          </table>
+         {showModal === true && (
+            <Modal
+               aciklama={"silmek istediğinize emin misiniz?"}
+               title={silinecekKitapIsmi}
+               onConfirm={() => KitapSil(silinecekKitap)}
+               onCancel={() => setShowModal(false)}
+            />
+         )}
       </div>
    );
 };

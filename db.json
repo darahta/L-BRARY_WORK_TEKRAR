@@ -18,15 +18,15 @@
       "id": 3,
       "name": "Denemeler",
       "author": "Montaigne",
-      "isbn": "11111111113",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isbn": "11111111113"
     },
     {
-      "id": 1669219914029,
-      "name": "fdsf",
-      "author": "fsadf",
-      "isbn": "",
-      "categoryId": "1"
+      "id": 1669301597615,
+      "name": "mehmetler",
+      "author": "sümü",
+      "categoryId": "3",
+      "isbn": ""
     }
   ],
   "categories": [

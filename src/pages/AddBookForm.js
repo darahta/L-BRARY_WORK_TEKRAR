@@ -2,24 +2,26 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AddBookForm = (props) => {
+   const { categoriesState } = useSelector((state) => state);
    const navigate = useNavigate();
-   const [categories, setCategories] = useState(null);
+   // const [categories, setCategories] = useState(null);
    const [bookname, setBookName] = useState("");
    const [author, setAuthor] = useState("");
    const [isbn, setIsbn] = useState("");
    const [category, setCategory] = useState(0);
 
-   useEffect(() => {
-      axios
-         .get("http://localhost:3004/categories")
-         .then((res) => {
-            console.log(res);
-            setCategories(res.data);
-         })
-         .catch((err) => console.log("err", err));
-   }, []);
+   // useEffect(() => {
+   //    axios
+   //       .get("http://localhost:3004/categories")
+   //       .then((res) => {
+   //          console.log(res);
+   //          setCategories(res.data);
+   //       })
+   //       .catch((err) => console.log("err", err));
+   // }, []);
    const handleSubmit = (event) => {
       event.preventDefault();
       if (bookname === "" || author === "" || category === "") {
@@ -45,7 +47,7 @@ const AddBookForm = (props) => {
          .catch((err) => console.log("err", err));
    };
 
-   if (categories === null) {
+   if (categoriesState.success !== true) {
       return <Loading />;
    }
 
@@ -91,14 +93,18 @@ const AddBookForm = (props) => {
                      <option value={""} selected>
                         Kategori Seçin
                      </option>
-                     {categories.map((cat) => {
-                        return <option value={cat.id}>{cat.name}</option>;
+                     {categoriesState.categories.map((cat) => {
+                        return (
+                           <option key={cat.id} value={cat.id}>
+                              {cat.name}
+                           </option>
+                        );
                      })}
                   </select>
                </div>
             </div>
             <div className="d-flex justify-content-center">
-               <button type="submit" className="btn btn-primary w-50">
+               <button type="submit" className="btn btn-outline-primary w-25">
                   Kaydet
                </button>
             </div>
