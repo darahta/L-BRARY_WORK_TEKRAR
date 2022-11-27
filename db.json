@@ -15,32 +15,43 @@
       "categoryId": "2"
     },
     {
-      "id": 3,
-      "name": "Denemeler",
-      "author": "Montaigne",
-      "categoryId": "3",
-      "isbn": "11111111113"
+      "id": 1669380524128,
+      "name": "denemeler",
+      "author": "deneler",
+      "categoryId": "2",
+      "isbn": ""
     },
     {
-      "id": 1669301597615,
-      "name": "mehmetler",
-      "author": "sümü",
-      "categoryId": "3",
-      "isbn": ""
+      "id": 1669545018744,
+      "name": "deneme",
+      "author": "denem",
+      "isbn": "",
+      "categoryId": "2"
+    },
+    {
+      "id": 1669545029448,
+      "name": "rıza",
+      "author": "KAYA",
+      "isbn": "",
+      "categoryId": "2"
     }
   ],
   "categories": [
     {
-      "id": "1",
+      "id": 1,
       "name": "Roman"
     },
     {
-      "id": "2",
+      "id": 2,
       "name": "Hikaye"
     },
     {
-      "id": "3",
+      "id": 1669468263169,
       "name": "Deneme"
+    },
+    {
+      "id": 1669534556213,
+      "name": "Resim"
     }
   ]
 }

@@ -1,53 +1,55 @@
 const initialState = {
    start: false,
    success: false,
-   categories: [],
+   books: [],
    fail: false,
    errorMessage: "",
 };
 
-const categoriesReducer = (state = initialState, action) => {
+const booksReducer = (state = initialState, action) => {
    switch (action.type) {
-      case "FETCH_CATEGORİES_START":
+      case "FETCH_BOOKS_START":
          return {
             ...state,
             start: true,
          };
-      case "FETCH_CATEGORİES_SUCCESS":
+      case "FETCH_BOOKS_SUCCESS":
          return {
             ...state,
             start: false,
             success: true,
-            categories: action.payload,
+            books: action.payload,
          };
-      case "FETCH_CATEGORİES_FAIL":
+      case "FETCH_BOOKS_FAIL":
          return {
             ...state,
             start: false,
             fail: true,
             errorMessage: action.payload,
          };
-      case "ADD_CATEGORY":
+      case "ADD_BOOK":
          return {
             ...state,
-            categories: [...state.categories, action.payload],
+            books: [...state.books, action.payload],
          };
-      case "DELETE_CATEGORY":
-         const filteredCategories = state.categories.filter(
+      case "DELETE_BOOK":
+         const filteredBooks = state.books.filter(
             (item) => item.id !== action.payload
          );
          return {
             ...state,
-            categories: filteredCategories,
+            books: filteredBooks,
          };
 
-      case "EDIT_CATEGORY":
-         const filteredCategoriesEdit = state.categories.filter(
-            (item) => item.id !== action.payload.id
+      case "EDIT_BOOK":
+         // 1- Güncellenecek kitabın o anki  halini diziden çıkar
+         // 2- Güncel halini diziye ekle
+         const filteredBooksEdit = state.books.filter(
+            (item) => item.id != action.payload.id
          );
          return {
             ...state,
-            categories: [...filteredCategoriesEdit, action.payload],
+            books: [...filteredBooksEdit, action.payload],
          };
 
       default:
@@ -55,4 +57,4 @@ const categoriesReducer = (state = initialState, action) => {
    }
 };
 
-export default categoriesReducer;
+export default booksReducer;

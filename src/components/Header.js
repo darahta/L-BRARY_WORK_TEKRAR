@@ -26,7 +26,16 @@ const Header = () => {
                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                   <li className="nav-item">
                      <Link to="/" className="nav-link active" href="#">
-                        Home
+                        Kitaplar
+                     </Link>
+                  </li>
+                  <li className="nav-item">
+                     <Link
+                        to="/categories"
+                        className="nav-link active"
+                        href="#"
+                     >
+                        Kategoriler
                      </Link>
                   </li>
                </ul>

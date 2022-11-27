@@ -2,37 +2,30 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loading from "./Loading";
-import components from "../components/delete.svg";
-import pencil from "../components/pencil.svg";
+import Delete from "../components/delete.svg";
+import Pencil from "../components/pencil.svg";
 import Modal from "./Modal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const ListBooks = (props) => {
-   const { categoriesState } = useSelector((state) => state);
+   const dispatch = useDispatch();
+   const { categoriesState, booksState } = useSelector((state) => state);
    console.log("listbooks", categoriesState);
-   const [books, setBooks] = useState(null);
+   console.log("booksState", booksState);
+   const [filterBbooks, setFilterBooks] = useState(null);
    // const [categories, setCategories] = useState(null);
    const [didUpdate, setDidUpdate] = useState(false);
    const [showModal, setShowModal] = useState(false);
    const [silinecekKitap, setSilinecekKitap] = useState(null);
    const [silinecekKitapIsmi, setSilinecekKitapIsmi] = useState("");
+   const [searchText, setSearchText] = useState("");
 
    useEffect(() => {
-      axios
-         .get("http://localhost:3004/books")
-         .then((resBook) => {
-            console.log(resBook.data);
-            setBooks(resBook.data);
-            // axios
-            //    .get("http://localhost:3004/categories")
-            //    .then((resCat) => {
-            //       setCategories(resCat.data);
-            //    })
-            //    .catch((err) => console.log("categories err", err));
-         })
-
-         .catch((err) => console.log("book err", err));
-   }, [didUpdate]);
+      const filteder = booksState.books.filter((item) =>
+         item.name.toLowerCase().includes(searchText)
+      );
+      setFilterBooks(filteder);
+   }, [searchText]);
 
    const KitapSil = (id) => {
       console.log(id);
@@ -41,11 +34,16 @@ const ListBooks = (props) => {
          .then((res) => {
             setDidUpdate(!didUpdate);
             setShowModal(false);
+            dispatch({ type: "DELETE_BOOK", payload: id });
          })
          .catch((err) => console.log(err));
    };
 
-   if (books === null || categoriesState.success !== true) {
+   if (
+      booksState.success !== true ||
+      categoriesState.success !== true ||
+      filterBbooks === null
+   ) {
       return (
          <div>
             <Loading />
@@ -55,7 +53,16 @@ const ListBooks = (props) => {
 
    return (
       <div className="container my-5">
-         <div className="my-3 d-flex justify-content-end ">
+         <div className="my-3 d-flex justify-content-between ">
+            <div className="w-50">
+               <input
+                  value={searchText}
+                  onChange={(event) => setSearchText(event.target.value)}
+                  placeholder="Aranacak kitap listesi"
+                  type="text"
+                  className="form-control w-100"
+               />
+            </div>
             <Link to="/add-book" className="btn btn-primary">
                Kitap Ekle
             </Link>
@@ -71,9 +78,9 @@ const ListBooks = (props) => {
                </tr>
             </thead>
             <tbody>
-               {books.map((book) => {
+               {filterBbooks.map((book) => {
                   const category = categoriesState.categories.find(
-                     (cat) => cat.id === book.categoryId
+                     (cat) => cat.id == book.categoryId
                   );
                   return (
                      <tr className="text-center" key={book.id}>
@@ -93,13 +100,13 @@ const ListBooks = (props) => {
                                     // KitapSil(book.id);
                                  }}
                               >
-                                 <img src={components} />
+                                 <img src={Delete} />
                               </div>
                               <Link
                                  to={`edit-book/${book.id}`}
                                  className="btn-sm"
                               >
-                                 <img src={pencil} />
+                                 <img src={Pencil} />
                               </Link>
                            </div>
                         </td>
